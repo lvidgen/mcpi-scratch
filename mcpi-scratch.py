@@ -208,10 +208,10 @@ class GetHandler(BaseHTTPRequestHandler):
             coordVal = playerPos.z
         return str(coordVal)
         
-        def getPos(self, params):
+    def getPos(self, params):
         log.info('getting player position')
         x1,y1,z1= mc.player.getTilePos() #because all we need is integers, really
-	    pobj={}
+	pobj={}
         pobj["x"] = x1
         pobj["y"] = y1
         pobj["z"] = z1
@@ -223,8 +223,8 @@ class GetHandler(BaseHTTPRequestHandler):
         x = int(params[0])
         y = int(params[1])
         z = int(params[2])
-	    log.info('getting block type at: {0}'.format(params))
-	    return str(mc.getBlock(x, y, z))
+	log.info('getting block type at: {0}'.format(params))
+        return str(mc.getBlock(x, y, z))
 
     # currently unused
     def pollEvents(self, params):
