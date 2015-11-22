@@ -206,6 +206,24 @@ class GetHandler(BaseHTTPRequestHandler):
         if (coord == 'z'):
             coordVal = playerPos.z
         return str(coordVal)
+        
+        def getPos(self, params):
+        log.info('getting player position')
+        x1,y1,z1= mc.player.getTilePos() #because all we need is integers, really
+	    pobj={}
+        pobj["x"] = x1
+        pobj["y"] = y1
+        pobj["z"] = z1
+        posStr = json.dumps(pobj)
+        log.debug(posStr)
+        return posStr
+        
+    def getBlockId(self, params):
+        x = int(params[0])
+        y = int(params[1])
+        z = int(params[2])
+	    log.info('getting block type at: {0}'.format(params))
+	    return str(mc.getBlock(x, y, z))
 
     # currently unused
     def pollEvents(self, params):
@@ -251,6 +269,8 @@ class GetHandler(BaseHTTPRequestHandler):
             "cross_domain.xml" : self.cross_domain,
             "reset_all" : self.reset_all,
             "getPlayerPos" : self.getPlayerPos,
+            "getBlockId" : self.getBlockId,
+            "getPos" : self.getPos
         }
         parsed_path = urlparse.urlparse(self.path)
         message_parts = []
