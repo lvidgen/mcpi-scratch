@@ -5,6 +5,8 @@
     ext._getStatus = function() {
         return { status:2, msg:'Ready' };
     };
+    
+    ext.posObj={x:0,y:0,z:0};
 
     ext.postToChat = function(str) {
         var cmdUrl = "http://localhost:4715/postToChat/" + encodeURIComponent(str);
@@ -131,6 +133,42 @@
             }
         }); 
     };
+    
+    ext.updatePos = function(callback) {
+	var cmdUrl = "http://localhost:4715/getPos";
+        $.ajax({
+            type: "GET",
+            url: cmdUrl,
+            success: function(data) {
+                console.log("getPos success");
+		callback();
+		ext.posObj=JSON.parse(data.trim());
+            },
+            error: function(jqxhr, textStatus, error) { // have to change this coz jasonp parse error
+                console.log("Error getPos: ", error);
+            }
+        }); 
+    };
+    
+    ext.getPos = function(dimn) {
+        return ext.posObj[dimn];
+    };
+    
+    ext.getBlockId = function(x,y,z,callback) {
+    	var cmdUrl = "http://localhost:4715/getBlockId/" + x + "/" + y + "/" + z;
+        $.ajax({
+            type: "GET",
+            url: cmdUrl,
+            //dataType: "jsonp", // hack for the not origin problem - replace with CORS based solution
+            success: function(data) {
+                console.log("getBlockId success");
+				callback(data.trim());
+            },
+            error: function(jqxhr, textStatus, error) { // have to change this coz jasonp parse error
+                console.log("Error getBlockId: ", error);
+            }
+        });
+    };
 
 
     // Block and block menu descriptions
@@ -144,6 +182,9 @@
             [" ", "set line pos x1:%n z1:%n to x2:%n z2:%n height y:%n to type %n data %n", "setLine", 0, 0, 0, 0, 0, 1, -1],
             [" ", "set circle center x1:%n z1:%n radius r:%n at height y:%n to type %n data %n", "setCircle", 0, 0, 0, 0, 0, 1, -1],
             ["R", "get player pos %m.pos", "getPlayerPos", 'x'],
+            ['w', 'update Player position', 'updatePos'],
+		    ["r", "get Player Position at %m.pos", "getPos", "x"],
+		    ["R", "get block ID at x:%n y:%n z:%n", "getBlockId", 0, 0, 0]
         ],
         menus: {
             pos: ['x', 'y', 'z'],
