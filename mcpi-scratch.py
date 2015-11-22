@@ -8,6 +8,7 @@ import urlparse
 import mcpi.minecraft as minecraft
 import mcpi.block as block
 import logging
+import json
 
 logging.basicConfig(level=logging.DEBUG)
 #logging.basicConfig(level=logging.INFO)
